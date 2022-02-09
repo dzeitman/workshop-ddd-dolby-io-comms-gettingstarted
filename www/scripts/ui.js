@@ -17,7 +17,9 @@ const initUI = async () => {
 
 
   const navSettings = document.getElementById('nav-settings');
-  navSettings.style.display = "none"; // show with block 
+
+  document.getElementById('nav-settings').classList.add('d-none');
+  // navSettings.style.display = "none"; // show with block 
 
   const dolbyVoiceBtn = document.getElementById('dolby-voice-btn');
 
@@ -28,14 +30,13 @@ const initUI = async () => {
   inputAudioDevices = document.getElementById("input-audio-devices");
   outputAudioDevices = document.getElementById("output-audio-devices");
 
-  setVideoDeviceBtn.disabled = true;
-  setInputAudioDeviceBtn.disabled = true;
-  setOutputAudioDeviceBtn.disabled = true;
+  // setVideoDeviceBtn.disabled = true;
+  // setInputAudioDeviceBtn.disabled = true;
+  // setOutputAudioDeviceBtn.disabled = true;
 
-  leaveButton.disabled = true;
+  // leaveButton.disabled = true;
 
   let audioOn = false;
-  let videoOn = true;
   let useDolbyVoice = true;
 
 
@@ -52,33 +53,33 @@ const initUI = async () => {
 
   // Update the login message with the name of the user
   nameInput.value = randomName;
-  joinButton.disabled = false;
+  // joinButton.disabled = false;
 
 
   // device selection
   setVideoDeviceBtn.onclick = async () => {
     let selectedVideoDevice = videoDevices.options[videoDevices.selectedIndex];
-    alert(`You're video device has been set to: ${selectedVideoDevice.text}`);
+    // alert(`You're video device has been set to: ${selectedVideoDevice.text}`);
     await VoxeetSDK.mediaDevice.selectVideoInput(selectedVideoDevice.value);
   }
 
   setInputAudioDeviceBtn.onclick = async () => {
     let selectedInputAudioDevice = inputAudioDevices.options[inputAudioDevices.selectedIndex];
-    alert(`You're input audio device (mic) has been set to: ${selectedInputAudioDevice.text}`)
+    // alert(`You're input audio device (mic) has been set to: ${selectedInputAudioDevice.text}`)
     await VoxeetSDK.mediaDevice.selectAudioInput(selectedInputAudioDevice.value);
   }
 
   setOutputAudioDeviceBtn.onclick = async () => {
     let selectedOutputAudioDevice = outputAudioDevices.options[outputAudioDevices.selectedIndex];
-    alert(`You're output audio device (speaker) has been set to: ${selectedOutputAudioDevice.text}`)
+    // alert(`You're output audio device (speaker) has been set to: ${selectedOutputAudioDevice.text}`)
     await VoxeetSDK.mediaDevice.selectAudioOutput(selectedOutputAudioDevice.value);
   }
 
- 
+
 
   joinButton.onclick = async () => {
     // open a session with participant object
-    await VoxeetSDK.session.open({ name: nameInput.value  }).catch((err) => console.error(err));
+    await VoxeetSDK.session.open({ name: nameInput.value }).catch((err) => console.error(err));
 
     // Default conference parameters
     // See: https://docs.dolby.io/communications-apis/docs/js-client-sdk-model-conferenceparameters
@@ -116,28 +117,37 @@ const initUI = async () => {
           .then((conf) => {
             //update ui
             nameInput.disabled = true;
+            document.getElementById('join-btn').classList.add('d-none');
+            document.getElementById('leave-btn').classList.remove('d-none');
+            document.getElementById('nav-settings').classList.remove('d-none');
+
+
+            //reset other ui elements
+            document.getElementById('start-video-btn').classList.add('d-none');
+            document.getElementById('stop-video-btn').classList.remove('d-none');
+            document.getElementById('start-audio-btn').classList.remove('d-none');
+            document.getElementById('stop-audio-btn').classList.add('d-none');
+            document.getElementById('start-screenshare-btn').classList.remove('d-none');
+            document.getElementById('stop-screenshare-btn').classList.add('d-none');
+            document.getElementById('start-recording-btn').classList.remove('d-none');
+            document.getElementById('stop-recording-btn').classList.add('d-none');
+
+            document.getElementById('participants-settings').classList.remove('d-none');
+
+
+
+            // navSettings.style.display = "block"; // block 
             lblDolbyVoice.innerHTML = `Dolby Voice ${conf.params.dolbyVoice ? 'On' : 'Off'}`;
             useDolbyVoice = conf.params.dolbyVoice;
             dolbyVoiceBtn.checked = useDolbyVoice;
             conferenceAliasInput.disabled = true;
-            joinButton.disabled = true;
-            leaveButton.disabled = false;
-            startVideoBtn.disabled = true;
-            startAudioBtn.disabled = false;
-            stopAudioBtn.disabled = true;
-            stopVideoBtn.disabled = false;
-            startScreenShareBtn.disabled = false;
-            startRecordingBtn.disabled = false;
-            setVideoDeviceBtn.disabled = false;
-            setInputAudioDeviceBtn.disabled = false;
-            setOutputAudioDeviceBtn.disabled = false;
-            navSettings.style.display = "block"; // block 
+
 
             // Populate All Device options once  
             if (videoDevices.options.length == 0) {
               enumerateMediaDevices();
             }
-          
+
           })
           .catch((err) => console.error(err));
       })
@@ -149,24 +159,27 @@ const initUI = async () => {
     // Leave the conference
     VoxeetSDK.conference.leave()
       .then(() => {
-        lblDolbyVoice.innerHTML = `Dolby Voice ${useDolbyVoice ? 'On' : 'Off'}`;
-        dolbyVoiceBtn.checked = useDolbyVoice;
-        conferenceAliasInput.disabled = false;
-        joinButton.disabled = false;
-        leaveButton.disabled = true;
-        startVideoBtn.disabled = true;
-        stopVideoBtn.disabled = true;
-        startAudioBtn.disabled = true;
-        stopAudioBtn.disabled = true;
-        startScreenShareBtn.disabled = true;
-        stopScreenShareBtn.disabled = true;
-        startRecordingBtn.disabled = true;
-        stopRecordingBtn.disabled = true;
 
         // See Docs:  https://docs.dolby.io/communications-apis/docs/initializing-javascript#open-a-session
         // close the session
-      VoxeetSDK.session.close().then(() => {
-        nameInput.disabled = false;
+        VoxeetSDK.session.close().then(() => {
+          //update ui
+          document.getElementById('join-btn').classList.remove('d-none');
+          document.getElementById('leave-btn').classList.add('d-none');
+          document.getElementById('label-dolby-voice').innerHTML = `Dolby Voice ${useDolbyVoice ? 'On' : 'Off'}`;
+          nameInput.disabled = false;
+          conferenceAliasInput.disabled = false;
+          //reset other ui elements
+          document.getElementById('start-video-btn').classList.add('d-none');
+          document.getElementById('stop-video-btn').classList.add('d-none');
+          document.getElementById('start-audio-btn').classList.add('d-none');
+          document.getElementById('stop-audio-btn').classList.add('d-none');
+          document.getElementById('start-screenshare-btn').classList.add('d-none');
+          document.getElementById('stop-screenshare-btn').classList.add('d-none');
+          document.getElementById('start-recording-btn').classList.add('d-none');
+          document.getElementById('stop-recording-btn').classList.add('d-none');
+          document.getElementById('participants-settings').classList.add('d-none');
+
         }).catch((err) => console.error(err));
       })
       .catch((err) => console.error(err));
@@ -178,7 +191,7 @@ const initUI = async () => {
     // check if the current session participant is speaking every 5 milliseconds
     setInterval(() => {
 
-      
+
       let participants = VoxeetSDK.conference.participants;
 
       for (let participant of participants) {
@@ -187,7 +200,7 @@ const initUI = async () => {
           (isSpeaking) => {
             console.log('The participant', participant[0], 'speaking status:', isSpeaking);
             // get card body
-            if(document.getElementById(`video-${participant[0]}`) == undefined) { return };
+            if (document.getElementById(`video-${participant[0]}`) == undefined) { return };
 
             let card = document.getElementById(`video-${participant[0]}`).parentElement;
             if (isSpeaking) {
@@ -209,21 +222,22 @@ const initUI = async () => {
     // Start sharing the video with the other participants
     VoxeetSDK.conference.startVideo(VoxeetSDK.session.participant)
       .then(() => {
-        startVideoBtn.disabled = true;
-        stopVideoBtn.disabled = false;
+        //update ui
+        document.getElementById('start-video-btn').classList.add('d-none');
+        document.getElementById('stop-video-btn').classList.remove('d-none');
       })
       .catch((err) => console.error(err));
 
   };
 
-
-
   stopVideoBtn.onclick = async () => {
     // Stop sharing the video with the other participants
     VoxeetSDK.conference.stopVideo(VoxeetSDK.session.participant)
       .then(() => {
-        stopVideoBtn.disabled = true;
-        startVideoBtn.disabled = false;
+        //update ui
+        document.getElementById('start-video-btn').classList.remove('d-none');
+        document.getElementById('stop-video-btn').classList.add('d-none');
+
       })
       .catch((err) => console.error(err));
   };
@@ -232,8 +246,11 @@ const initUI = async () => {
     // Start sharing the Audio with the other participants
     VoxeetSDK.conference.startAudio(VoxeetSDK.session.participant)
       .then(() => {
-        startAudioBtn.disabled = true;
-        stopAudioBtn.disabled = false;
+
+        //update ui
+        document.getElementById('start-audio-btn').classList.add('d-none');
+        document.getElementById('stop-audio-btn').classList.remove('d-none');
+
         beginIsSpeaking();
       })
       .catch((err) => console.error(err));
@@ -243,8 +260,9 @@ const initUI = async () => {
     // Stop sharing the Audio with the other participants
     VoxeetSDK.conference.stopAudio(VoxeetSDK.session.participant)
       .then(() => {
-        stopAudioBtn.disabled = true;
-        startAudioBtn.disabled = false;
+        //update ui
+        document.getElementById('start-audio-btn').classList.remove('d-none');
+        document.getElementById('stop-audio-btn').classList.add('d-none');
       })
       .catch((err) => console.error(err));
   };
@@ -253,15 +271,21 @@ const initUI = async () => {
     // Start the Screen Sharing with the other participants
     VoxeetSDK.conference.startScreenShare()
       .then(() => {
-        startScreenShareBtn.disabled = true;
-        stopScreenShareBtn.disabled = false;
+        //update ui
+        document.getElementById('start-screenshare-btn').classList.add('d-none');
+        document.getElementById('stop-screenshare-btn').classList.remove('d-none');
+
       })
       .catch((err) => console.error(err));
   };
 
   stopScreenShareBtn.onclick = async () => {
     // Stop the Screen Sharing
-    VoxeetSDK.conference.stopScreenShare()
+    VoxeetSDK.conference.stopScreenShare().then(() => {
+      //update ui
+      document.getElementById('start-screenshare-btn').classList.remove('d-none');
+      document.getElementById('stop-screenshare-btn').classList.add('d-none');
+    })
       .catch((err) => console.error(err));
   };
 
@@ -272,13 +296,12 @@ const initUI = async () => {
     VoxeetSDK.recording.start()
       .then(() => {
         recordStatus.innerText = 'Recording...';
-        startRecordingBtn.disabled = true;
-        stopRecordingBtn.disabled = false;
+        //update ui
+        document.getElementById('start-recording-btn').classList.add('d-none');
+        document.getElementById('stop-recording-btn').classList.remove('d-none');
       })
       .catch((err) => console.error(err));
   };
-
-
 
 
   stopRecordingBtn.onclick = async () => {
@@ -288,8 +311,9 @@ const initUI = async () => {
     VoxeetSDK.recording.stop()
       .then(() => {
         recordStatus.innerText = '';
-        startRecordingBtn.disabled = false;
-        stopRecordingBtn.disabled = true;
+        //update ui
+        document.getElementById('start-recording-btn').classList.remove('d-none');
+        document.getElementById('stop-recording-btn').classList.add('d-none');
       })
       .catch((err) => console.error(err));
   };
@@ -373,7 +397,7 @@ const addVideoNode = (participant, stream) => {
 const removeVideoNode = (participant) => {
   let videoNode = document.getElementById('video-' + participant.id);
   if (videoNode) {
-     // traverse up parentNode to find cardNode element
+    // traverse up parentNode to find cardNode element
     let cardNode = videoNode.parentElement.parentElement.parentElement;
     videoNode.srcObject = null; // Prevent memory leak in Chrome
     cardNode.parentNode.removeChild(cardNode);
@@ -419,7 +443,7 @@ const addScreenShareNode = (stream) => {
   screenShareNode.autoplay = 'autoplay';
   screenShareNode.setAttribute('controls', true);
   navigator.attachMediaStream(screenShareNode, stream);
- 
+
   const screenShareContainer = document.getElementById('screenshare-container');
   screenShareContainer.appendChild(screenShareNode);
 }
@@ -458,21 +482,15 @@ const buildVideoNode = (name, id) => {
           <h4 class="text-center card-title">${name}</h4>
           <div class="mic" style="width=16px; height=16px;"></div>
           <div class="btn-toolbar text-sm-center d-xl-flex d-xxl-flex justify-content-xl-end align-items-xl-center justify-content-xxl-end align-items-xxl-center">
-             
-          <div role="group" class="btn-group btn-group-sm">
-                <button data-participant="${id}" class="unmute btn btn-info btn-sm" type="button">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-mic-fill" viewBox="0 0 16 16">
-                  <path d="M5 3a3 3 0 0 1 6 0v5a3 3 0 0 1-6 0V3z"/>
-                  <path d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5z"/>
-                  </svg>
-                </button>
-                <button data-participant="${id}" class="mute btn btn-info btn-sm" type="button">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-mic-mute-fill" viewBox="0 0 16 16">
-                  <path d="M13 8c0 .564-.094 1.107-.266 1.613l-.814-.814A4.02 4.02 0 0 0 12 8V7a.5.5 0 0 1 1 0v1zm-5 4c.818 0 1.578-.245 2.212-.667l.718.719a4.973 4.973 0 0 1-2.43.923V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 1 0v1a4 4 0 0 0 4 4zm3-9v4.879L5.158 2.037A3.001 3.001 0 0 1 11 3z"/>
-                  <path d="M9.486 10.607 5 6.12V8a3 3 0 0 0 4.486 2.607zm-7.84-9.253 12 12 .708-.708-12-12-.708.708z"/>
-                  </svg>
-              </button>
-          </div>
+          <div class="form-check form-switch">
+          <input class="form-check-input mute-switch" data-participant="${id}" type="checkbox" role="switch" checked>
+         <label class="form-check-label text-sm-center text-info data-participant="${id} mute-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-mic-mute-fill" viewBox="0 0 16 16">
+            <path d="M13 8c0 .564-.094 1.107-.266 1.613l-.814-.814A4.02 4.02 0 0 0 12 8V7a.5.5 0 0 1 1 0v1zm-5 4c.818 0 1.578-.245 2.212-.667l.718.719a4.973 4.973 0 0 1-2.43.923V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 1 0v1a4 4 0 0 0 4 4zm3-9v4.879L5.158 2.037A3.001 3.001 0 0 1 11 3z"/>
+            <path d="M9.486 10.607 5 6.12V8a3 3 0 0 0 4.486 2.607zm-7.84-9.253 12 12 .708-.708-12-12-.708.708z"/>
+            </svg>
+         </label>
+        </div>
           </div>
       </div>
   </div>
@@ -483,26 +501,38 @@ const buildVideoNode = (name, id) => {
 // dynamically add event listeners as video cards are added to dom.
 const addMuteListeners = () => {
 
-  document.querySelectorAll(['.unmute', '.mute']).forEach(ele => {
-
+  document.querySelectorAll(['.mute-switch']).forEach(ele => {
     ele.onclick = () => {
       let participant = VoxeetSDK.conference.participants.get(ele.dataset.participant);
 
-      if (ele.matches('.unmute')) {
-        VoxeetSDK.conference.mute(participant, false);
+      if (ele.checked == true) {
+        VoxeetSDK.conference.mute(participant, true);
+        ele.nextElementSibling.innerHTML = ` <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-mic-mute-fill" viewBox="0 0 16 16">
+        <path d="M13 8c0 .564-.094 1.107-.266 1.613l-.814-.814A4.02 4.02 0 0 0 12 8V7a.5.5 0 0 1 1 0v1zm-5 4c.818 0 1.578-.245 2.212-.667l.718.719a4.973 4.973 0 0 1-2.43.923V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 1 0v1a4 4 0 0 0 4 4zm3-9v4.879L5.158 2.037A3.001 3.001 0 0 1 11 3z"/>
+        <path d="M9.486 10.607 5 6.12V8a3 3 0 0 0 4.486 2.607zm-7.84-9.253 12 12 .708-.708-12-12-.708.708z"/>
+        </svg>`;
         console.log(`${participant.info.name} is muted `, VoxeetSDK.conference.isMuted());
       } else {
-        VoxeetSDK.conference.mute(participant, true);
+        VoxeetSDK.conference.mute(participant, false);
+        ele.nextElementSibling.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-mic-fill" viewBox="0 0 16 16">
+        <path d="M5 3a3 3 0 0 1 6 0v5a3 3 0 0 1-6 0V3z"/>
+        <path d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5z"/>
+        </svg>`;
+
         console.log(`${participant.info.name} is muted `, VoxeetSDK.conference.isMuted());
+
       }
     }
   });
+
 }
 
-// remove listeners
+// remove listeners deprecated
+/*
 const updateMuteListeners = () => {
   document.querySelectorAll(['.unmute', '.mute']).forEach(ele => {
     ele.onclick = '';
   });
   addMuteListeners();
 }
+*/
