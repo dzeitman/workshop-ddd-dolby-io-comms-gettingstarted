@@ -80,6 +80,7 @@ const initUI = async () => {
 
 		// Default conference parameters
 		// See: https://docs.dolby.io/communications-apis/docs/js-client-sdk-model-conferenceparameters
+    // What if we changed these?
 		let conferenceParams = {
 			liveRecording: true,
 			rtcpMode: "average", // worst, average, max
@@ -110,6 +111,7 @@ const initUI = async () => {
 				};
 
 				// 2. Join the conference
+        // What if we instead enabled all buttons?
 				VoxeetSDK.conference
 					.join(conference, joinOptions)
 					.then((conf) => {
@@ -165,7 +167,7 @@ const initUI = async () => {
 						}`;
 						useDolbyVoice = conf.params.dolbyVoice;
 						document.getElementById("dolby-voice-btn").checked = useDolbyVoice;
-						document.getElementById("alias-input").disabled = true;
+						document.getElementById("alias-input").disabled = true; //Could try changing to false? What would happen?
 
 						// Populate All Device options once
 						if (videoDevices.options.length == 0) {
