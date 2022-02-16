@@ -2,7 +2,7 @@ const avengersNames = ['Thor', 'Cap', 'Tony Stark', 'Black Panther', 'Black Wido
 let randomName = avengersNames[Math.floor(Math.random() * avengersNames.length)];
 
 // URL to our token-generator function
-const tokenServerURL = './api/token-generator';
+const tokenServerURL = 'https://zealous-bell-161b0d.netlify.app/api/token-generator';
 
 const main = async () => {
 
