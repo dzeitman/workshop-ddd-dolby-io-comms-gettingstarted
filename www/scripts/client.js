@@ -2,8 +2,7 @@ const avengersNames = ['Thor', 'Cap', 'Tony Stark', 'Black Panther', 'Black Wido
 let randomName = avengersNames[Math.floor(Math.random() * avengersNames.length)];
 
 // URL to our token-generator function
-const tokenServerURL = './api/token-generator';  //'https://zealous-bell-161b0d.netlify.app/api/token-generator';
-
+const tokenServerURL = './api/token-generator';
 const main = async () => {
 
   /* Event handlers */
@@ -20,14 +19,14 @@ const main = async () => {
     }
 
     addParticipantNode(participant);
-    
+
   });
 
 
-  
+
   // When a stream is updated
   VoxeetSDK.conference.on('streamUpdated', (participant, stream) => {
-    
+
     if (stream.type === 'ScreenShare') return;
 
     if (stream.getVideoTracks().length) {
