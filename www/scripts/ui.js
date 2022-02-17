@@ -141,10 +141,10 @@ const initUI = async () => {
 						//reset other ui elements
 						document.getElementById("start-video-btn").classList.add("d-none");
 						document.getElementById("stop-video-btn").classList.remove("d-none");
-						document.getElementById("start-screenshare-btn".classList.remove("d-none");
+						document.getElementById("start-screenshare-btn").classList.remove("d-none");
 						document.getElementById("stop-screenshare-btn").classList.add("d-none");
 						document.getElementById("start-recording-btn").classList.remove("d-none");
-						documen.getElementById("stop-recording-btn").classList.add("d-none");
+						document.getElementById("stop-recording-btn").classList.add("d-none");
 						document.getElementById("participants-settings").classList.remove("d-none");
 
 						document.getElementById("label-dolby-voice").innerHTML = `Dolby Voice ${conf.params.dolbyVoice ? "On" : "Off"}`;
