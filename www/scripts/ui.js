@@ -93,9 +93,9 @@ const initUI = async () => {
 						audio: audioOn,
 						video: true,
 					},
-					preferRecvMono: false,
-					preferSendMono: false,
-					spatialAudio: useDolbyVoice, // Turn on Spatial Audio
+					//preferRecvMono: false,
+					//preferSendMono: false,
+					//spatialAudio: useDolbyVoice, // Turn on Spatial Audio
 				};
 
 				// 2. Join the conference
