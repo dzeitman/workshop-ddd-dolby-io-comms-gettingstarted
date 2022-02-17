@@ -26,9 +26,8 @@ const initUI = async () => {
 		} else {
 			useDolbyVoice = false;
 		}
-		document.getElementById("label-dolby-voice").innerHTML = `Dolby Voice ${
-			useDolbyVoice ? "On" : "Off"
-		}`;
+		document.getElementById("label-dolby-voice").innerHTML = `Dolby Voice ${useDolbyVoice ? "On" : "Off"
+			}`;
 	};
 
 	// Set The device Selection
@@ -80,7 +79,7 @@ const initUI = async () => {
 
 		// Default conference parameters
 		// See: https://docs.dolby.io/communications-apis/docs/js-client-sdk-model-conferenceparameters
-    // What if we changed these?
+		// What if we changed these?
 		let conferenceParams = {
 			liveRecording: true,
 			rtcpMode: "average", // worst, average, max
@@ -111,7 +110,7 @@ const initUI = async () => {
 				};
 
 				// 2. Join the conference
-        // What if we instead enabled all buttons?
+				// What if we instead enabled all buttons?
 				VoxeetSDK.conference
 					.join(conference, joinOptions)
 					.then((conf) => {
@@ -141,30 +140,14 @@ const initUI = async () => {
 
 						//reset other ui elements
 						document.getElementById("start-video-btn").classList.add("d-none");
-						document
-							.getElementById("stop-video-btn")
-							.classList.remove("d-none");
-						document
-							.getElementById("start-screenshare-btn")
-							.classList.remove("d-none");
-						document
-							.getElementById("stop-screenshare-btn")
-							.classList.add("d-none");
-						document
-							.getElementById("start-recording-btn")
-							.classList.remove("d-none");
-						document
-							.getElementById("stop-recording-btn")
-							.classList.add("d-none");
-						document
-							.getElementById("participants-settings")
-							.classList.remove("d-none");
+						document.getElementById("stop-video-btn").classList.remove("d-none");
+						document.getElementById("start-screenshare-btn".classList.remove("d-none");
+						document.getElementById("stop-screenshare-btn").classList.add("d-none");
+						document.getElementById("start-recording-btn").classList.remove("d-none");
+						documen.getElementById("stop-recording-btn").classList.add("d-none");
+						document.getElementById("participants-settings").classList.remove("d-none");
 
-						document.getElementById(
-							"label-dolby-voice"
-						).innerHTML = `Dolby Voice ${
-							conf.params.dolbyVoice ? "On" : "Off"
-						}`;
+						document.getElementById("label-dolby-voice").innerHTML = `Dolby Voice ${conf.params.dolbyVoice ? "On" : "Off"}`;
 						useDolbyVoice = conf.params.dolbyVoice;
 						document.getElementById("dolby-voice-btn").checked = useDolbyVoice;
 						document.getElementById("alias-input").disabled = true; //Could try changing to false? What would happen?
@@ -289,8 +272,7 @@ const initUI = async () => {
 
 	document.getElementById("start-audio-btn").onclick = async () => {
 		// Start sharing the Audio with the other participants
-		VoxeetSDK.conference
-			.startAudio(VoxeetSDK.session.participant)
+		VoxeetSDK.conference.startAudio(VoxeetSDK.session.participant)
 			.then(() => {
 				//update ui
 				document.getElementById("start-audio-btn").classList.add("d-none");
@@ -303,8 +285,7 @@ const initUI = async () => {
 
 	document.getElementById("stop-audio-btn").onclick = async () => {
 		// Stop sharing the Audio with the other participants
-		VoxeetSDK.conference
-			.stopAudio(VoxeetSDK.session.participant)
+		VoxeetSDK.conference.stopAudio(VoxeetSDK.session.participant)
 			.then(() => {
 				//update ui
 				document.getElementById("start-audio-btn").classList.remove("d-none");
@@ -315,8 +296,7 @@ const initUI = async () => {
 
 	document.getElementById("start-screenshare-btn").onclick = async () => {
 		// Start the Screen Sharing with the other participants
-		VoxeetSDK.conference
-			.startScreenShare()
+		VoxeetSDK.conference.startScreenShare()
 			.then(() => {
 				//update ui
 				document
@@ -331,8 +311,7 @@ const initUI = async () => {
 
 	document.getElementById("stop-screenshare-btn").onclick = async () => {
 		// Stop the Screen Sharing
-		VoxeetSDK.conference
-			.stopScreenShare()
+		VoxeetSDK.conference.stopScreenShare()
 			.then(() => {
 				//update ui
 				document
@@ -536,7 +515,7 @@ const addVideoNode = (participant, stream) => {
 			.firstElementChild.replaceWith(videoNode);
 
 		// add event handlers for mute / unmute buttons
-		addMuteListeners();
+		// addMuteListeners();
 	}
 	navigator.attachMediaStream(videoNode, stream);
 };
@@ -643,7 +622,7 @@ const buildVideoNode = (name, id) => {
           <h4 class="text-center card-title">${name}</h4>
           <div class="mic" style="width=16px; height=16px;"></div>
           <div class="btn-toolbar text-sm-center d-xl-flex d-xxl-flex justify-content-xl-end align-items-xl-center justify-content-xxl-end align-items-xxl-center">
-          <div class="form-check form-switch">
+          <div class="form-check form-switch d-none">
           <input class="form-check-input mute-switch" data-participant="${id}" type="checkbox" role="switch" checked>
          <label class="form-check-label text-sm-center text-info data-participant="${id} mute-label">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-mic-mute-fill" viewBox="0 0 16 16">
