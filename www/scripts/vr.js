@@ -1,8 +1,4 @@
 var canvas = document.getElementById("renderCanvas");
-var engine = null;
-var scene = null;
-var sceneToRender = null;
-var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false }); };
 
 var startRenderLoop = function (engine, canvas) {
     engine.runRenderLoop(function () {
@@ -12,9 +8,11 @@ var startRenderLoop = function (engine, canvas) {
     });
 }
 
-const createScene =  () => {
-
-
+var engine = null;
+var scene = null;
+var sceneToRender = null;
+var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false }); };
+const createScene = () => {
     const scene = new BABYLON.Scene(engine);
 
     const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 3, new BABYLON.Vector3(0, 0, 0));
@@ -30,7 +28,7 @@ const createScene =  () => {
 
 window.initFunction = async function () {
 
-    // video = document.querySelector("video");
+
     var asyncEngineCreation = async function () {
         try {
             return createDefaultEngine();
@@ -46,8 +44,7 @@ window.initFunction = async function () {
     window.scene = createScene();
 };
 initFunction().then(() => {
-    scene.then(returnedScene => { sceneToRender = returnedScene; });
-
+    sceneToRender = scene
 });
 
 // Resize
