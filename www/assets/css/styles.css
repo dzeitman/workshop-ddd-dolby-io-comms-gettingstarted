@@ -10,6 +10,11 @@ padding-top: 4em;
   padding: 1em;
 }
 
+canvas {
+  width: 300px;
+  height:300px;
+}
+
 /* .screenshare{
   width: --webkit-fill-available; 
 } */
